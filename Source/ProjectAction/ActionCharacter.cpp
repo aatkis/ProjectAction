@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Projectiles/ActionProjectileMagic.h"
 
 
 // Sets default values
@@ -21,7 +22,7 @@ AActionCharacter::AActionCharacter()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComponent->SetupAttachment(SpringArmComp);
 	
-	
+	MuzzleSocketName = "Muzzle_01";
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +49,7 @@ void AActionCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EnhancedInput->BindAction(InputMove, ETriggerEvent::Triggered, this, &AActionCharacter::Move);
 	EnhancedInput->BindAction(InputLook, ETriggerEvent::Triggered, this, &AActionCharacter::Look);
 	EnhancedInput->BindAction(InputJump, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+	EnhancedInput->BindAction(InputPrimaryAttack, ETriggerEvent::Triggered, this, &AActionCharacter::PrimaryAttack);
 }
 
 void AActionCharacter::Move(const FInputActionValue& InValue)
@@ -73,5 +75,18 @@ void AActionCharacter::Look(const FInputActionInstance& InValue)
 	
 	AddControllerPitchInput(InputValue.Y);
 	AddControllerYawInput(InputValue.X);
+}
+
+void AActionCharacter::PrimaryAttack()
+{
+	
+	
+	FVector SpawnLocation = GetMesh()->GetSocketLocation(MuzzleSocketName);
+	FRotator SpawnRotation = GetControlRotation();
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnLocation, SpawnRotation, SpawnParams);
 }
 

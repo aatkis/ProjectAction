@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "ActionCharacter.generated.h"
 
+class AActionProjectileMagic;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
@@ -23,6 +24,11 @@ public:
 
 protected:
 	
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TSubclassOf<AActionProjectileMagic>	ProjectileClass;
+	
+	UPROPERTY(VisibleAnywhere, Category="PrimaryAttack")
+	FName MuzzleSocketName;
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> InputMove;
@@ -32,6 +38,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputAction> InputJump;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputAction> InputPrimaryAttack;
 	
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	TObjectPtr<UCameraComponent> CameraComponent; 
@@ -45,6 +54,8 @@ protected:
 	void Move(const FInputActionValue& InValue);
 	
 	void Look(const FInputActionInstance& InValue);
+	
+	void PrimaryAttack();
 
 public:
 	// Called every frame
