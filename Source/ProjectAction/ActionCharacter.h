@@ -6,12 +6,14 @@
 #include "GameFramework/Character.h"
 #include "ActionCharacter.generated.h"
 
+class UNiagaraSystem;
 class AActionProjectileMagic;
 struct FInputActionInstance;
 struct FInputActionValue;
 class UInputAction;
 class USpringArmComponent;
 class UCameraComponent;
+class UAnimMontage;
 
 UCLASS()
 class PROJECTACTION_API AActionCharacter : public ACharacter
@@ -23,6 +25,15 @@ public:
 	AActionCharacter();
 
 protected:
+	
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TObjectPtr<UAnimMontage> AttackMontage;
+	
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TObjectPtr<UNiagaraSystem> CastingEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
+	TObjectPtr<USoundBase> CastingSound;
 	
 	UPROPERTY(EditDefaultsOnly, Category="PrimaryAttack")
 	TSubclassOf<AActionProjectileMagic>	ProjectileClass;
@@ -57,6 +68,8 @@ protected:
 	
 	void PrimaryAttack();
 
+	void AttackTimerElapsed();
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
